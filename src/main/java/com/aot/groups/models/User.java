@@ -14,7 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.aot.groups.models.Role;
 import com.aot.groups.models.User;
 
 @Entity
@@ -30,18 +29,13 @@ public class User {
     private String password;
     @Column(name = "name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-    		name = "user_role", 
-    		joinColumns = @JoinColumn(name = "user_id"), 
-    		inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    
 
     public User() {
     }
     public User(User users) {
         this.email = users.getEmail();
-        this.roles = users.getRoles();
+        
         this.name = users.getName();
         this.id = users.getId();
         this.password = users.getPassword();
@@ -80,13 +74,5 @@ public class User {
     }
 
 
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 }
 
