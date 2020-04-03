@@ -1,45 +1,58 @@
 package com.aot.groups.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import com.aot.groups.models.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
+	
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
-    private int id;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "password")
-    private String password;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
     @Column(name = "name")
     private String name;
     
+    @Email
+    @Column(name = "email")
+    private String email;
+    
+    private String imageUrl;
 
-    public User() {
-    }
-    public User(User users) {
-        this.email = users.getEmail();
-        
-        this.name = users.getName();
-        this.id = users.getId();
-        this.password = users.getPassword();
-    }
+    @Column(nullable = false)
+    private Boolean emailVerified = false;
+    
+    @JsonIgnore
+    @Column(name = "password")
+    private String password;
+    
+    
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
 
-    public int getId() {
+    private String providerId;
+    
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -50,6 +63,22 @@ public class User {
         this.email = email;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -58,12 +87,21 @@ public class User {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public AuthProvider getProvider() {
+        return provider;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
     }
 
 
