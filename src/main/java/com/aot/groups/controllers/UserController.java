@@ -1,5 +1,7 @@
 package com.aot.groups.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,19 +32,20 @@ public class UserController {
 	    }
 
 	    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-	    public User findOne(@PathVariable long id){
-	        return userRepository.findOne(id);
+	    public Optional<User> findOne(@PathVariable int id){
+	        return userRepository.findById(id);
 	    }
 
 	    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-	    public User update(@PathVariable long id, @RequestBody User user){
-	        user.setId(id);
+	    public User update(@PathVariable int id, @RequestBody User user){
+	    	User user1 = userRepository.findById(id).get();
+//	        user1.setId(id);
 	        return userRepository.save(user);
 	    }
 
 	    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-	    public void delete(@PathVariable(value = "id") Long id){
-	    	userRepository.delete(id);
+	    public void delete(@PathVariable(value = "id") int id){
+	    	userRepository.deleteById(id);
 	    }
 
 
