@@ -13,9 +13,9 @@ import javax.persistence.*;
 @Entity
 public class Group {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "group_id")
-	private Integer group_id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private Long id;
 	
 	@Column(name = "name")
 	private String name;
@@ -27,6 +27,16 @@ public class Group {
 	
 	
 	
+	public Group( String name, String description) {
+		super();
+
+		this.name = name;
+		this.description = description;
+
+	}
+
+
+
 	@ManyToMany
 	@JoinTable(
 			name = "user_groups",
@@ -44,12 +54,14 @@ public class Group {
 		this.users = users;
 	}
 
-	public Integer getGroup_id() {
-		return group_id;
+
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setGroup_id(Integer group_id) {
-		this.group_id = group_id;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
