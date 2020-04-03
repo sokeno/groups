@@ -44,7 +44,11 @@ public class User {
 
     private String providerId;
     
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+                },mappedBy = "users")
     private List<Group> groups;
     
     

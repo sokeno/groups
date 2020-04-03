@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.aot.groups.models.Group;
+import com.aot.groups.models.User;
 import com.aot.groups.repositories.GroupRepository;
 
 @RequestMapping("/api")
@@ -98,6 +99,7 @@ public class GroupController {
     }
     
     
+    
     @PutMapping("/groups/{id}")
     public ResponseEntity<Group> updateGroup(@PathVariable("id") long id, @RequestBody Group group) {
     	
@@ -110,6 +112,25 @@ public class GroupController {
     	  new_group.setName(group.getName());
     	  
     	  new_group.setDescription(group.getDescription());
+    	  
+        return new ResponseEntity<>(groupRepository.save(new_group), HttpStatus.OK);
+        
+      } else {
+    	  
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+      }
+    }
+
+    @PutMapping("/groups/{id}/users")
+    public ResponseEntity<Group> joinGroup(@PathVariable("id") long id, @RequestBody User group) {
+    	
+      Optional<Group> groupData = groupRepository.findById(id);
+
+      if (groupData.isPresent()) {
+    	  
+    	  Group new_group = groupData.get();
+    	  
+    	  new_group.getUsers().add(group);
     	  
         return new ResponseEntity<>(groupRepository.save(new_group), HttpStatus.OK);
         

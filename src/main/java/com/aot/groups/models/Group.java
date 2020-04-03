@@ -37,7 +37,18 @@ public class Group {
 
 
 
-	@ManyToMany
+	public Group(List<User> users) {
+		super();
+		this.users = users;
+	}
+
+
+
+	@ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            })
 	@JoinTable(
 			name = "user_groups",
 			joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
