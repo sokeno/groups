@@ -16,12 +16,12 @@ public class GroupController {
     private GroupRepository groupRepository;
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/all")
+    @GetMapping("/groups")
     public List <Group> getAllGroups(){
         return groupRepository.findAll();
     }
 
-    @GetMapping("/findFarm/{id}")
+    @GetMapping("/groups/{id}")
     public Optional<Group> findGroup(@PathVariable int id) {
         return groupRepository.findById(id);
     }
