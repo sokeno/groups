@@ -1,5 +1,6 @@
 package com.aot.groups.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import com.aot.groups.repositories.UserRepository;
 import com.aot.groups.security.CurrentUser;
 import com.aot.groups.security.UserPrincipal;
 
-import antlr.collections.List;
 
 @RestController
 @RequestMapping("/users")

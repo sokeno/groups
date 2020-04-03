@@ -1,5 +1,7 @@
 package com.aot.groups.models;
 
+import java.util.List;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -18,6 +20,9 @@ public class User {
     
     @Column(name = "name")
     private String name;
+    
+    @Column(name = "username")
+    private String username;
     
     @Email
     @Column(name = "email")
@@ -39,7 +44,20 @@ public class User {
 
     private String providerId;
     
-    public Long getId() {
+    @ManyToMany(mappedBy = "users")
+    private List<Group> groups;
+    
+    
+    
+    public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
+	}
+
+	public Long getId() {
         return id;
     }
 

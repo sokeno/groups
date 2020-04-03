@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 public class Group {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "group_id")
 	private Integer group_id;
 	
@@ -24,7 +24,7 @@ public class Group {
 	private String description;
 	
 	
-	private List<User> users;
+	
 	
 	
 	@ManyToMany
@@ -33,6 +33,9 @@ public class Group {
 			joinColumns = @JoinColumn(name = "group_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 			)
+	private List<User> users;
+	
+	
 	public List<User> getUsers() {
 		return users;
 	}
