@@ -65,7 +65,6 @@ public class GroupController {
              return new ResponseEntity<>(HttpStatus.NOT_FOUND);
              
            }
-//        return groupRepository.findByName(name);
     }
     
     @DeleteMapping("/groups/{id}")
