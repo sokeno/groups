@@ -4,12 +4,10 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
 @Table(name = "groups")
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Group {
 	
 	public Group() {
@@ -28,7 +26,7 @@ public class Group {
 	private String description;
 	
 	@Column(name = "created_by")
-	private Long created_by;
+	private Long createdBy;
 	
 
 	@ManyToMany(fetch = FetchType.LAZY,
@@ -45,12 +43,12 @@ public class Group {
 	
 	
 	
-	public Group( String name, String description, Long created_by) {
+	public Group( String name, String description, Long createdBy) {
 		super();
 
 		this.name = name;
 		this.description = description;
-		this.created_by = created_by;
+		this.createdBy = createdBy;
 
 	}
 
@@ -65,14 +63,14 @@ public class Group {
 
 	
 	
-	public Long getCreated_by() {
-		return created_by;
+	public Long getCreatedBy() {
+		return createdBy;
 	}
 
 
 
-	public void setCreated_by(Long created_by) {
-		this.created_by = created_by;
+	public void setCreatedBy(Long createdBy) {
+		this.createdBy = createdBy;
 	}
 
 

@@ -23,6 +23,7 @@ import com.aot.groups.repositories.GroupRepository;
 import com.aot.groups.repositories.UserRepository;
 import com.aot.groups.security.CurrentUser;
 import com.aot.groups.security.UserPrincipal;
+import com.aot.groups.exception.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/api")
@@ -135,18 +136,16 @@ public class GroupController {
     	
       Optional<Group> groupData = groupRepository.findById(id);
       
-      Optional<User> user = userRepository.findById(userPrincipal.getId());
+      User user = userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 
 
       if (groupData.isPresent()) {
     	  
     	  Group new_group = groupData.get();
     	  
-    	  User current_user = user.get();
-    	  
-    	  if(!new_group.getUsers().contains(current_user)) {
+    	  if(!new_group.getUsers().contains(user)) {
     		  
-    	  new_group.getUsers().add(current_user);
+    	  new_group.getUsers().add(user);
     	  
     	  groupRepository.save(new_group);
     	  
@@ -157,6 +156,34 @@ public class GroupController {
     	  
         return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
       }
+    }
+    
+    @GetMapping("/groups/remove/{user_id}/{group_id}")
+    public ResponseEntity<String> removeMemberFromGroup(@PathVariable("user_id") long user_id,@PathVariable("group_id") long group_id, @CurrentUser UserPrincipal userPrincipal) {
+    	
+    	Group groupData = groupRepository.findById(group_id).orElseThrow(() -> new ResourceNotFoundException("Group", "id", group_id));
+    	
+    	User user = userRepository.findById(user_id).orElseThrow(() -> new ResourceNotFoundException("User", "id", user_id));
+    	
+    	
+    	if (!(userPrincipal.getId()== user_id) || groupData.getCreatedBy() == userPrincipal.getId()){
+    		    		
+    		
+    		if(!groupData.getUsers().contains(user)) {
+
+    			
+    			return new ResponseEntity<>("User does not exist in this group", HttpStatus.NOT_FOUND);
+    		}
+    		
+		
+    		groupData.getUsers().remove(user);
+			
+			groupRepository.save(groupData);
+    		return new ResponseEntity<>("User Successfully removed",HttpStatus.OK);
+    	} else {
+    		
+    		return new ResponseEntity<>("You dont have permissions to remove the user from this group",HttpStatus.FORBIDDEN);
+    	}
     }
 
 
