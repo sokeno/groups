@@ -2,19 +2,20 @@ package com.aot.groups.models;
 
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.*;
 
 
 @Entity
+@Table(name = "groups")
 public class Group {
+	
+	public Group() {
+		super();
+	}
+
 	@Id
+	@Column(name = "group_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
 	private Long id;
 	
 	@Column(name = "name")
@@ -23,7 +24,18 @@ public class Group {
 	@Column(name = "description")
 	private String description;
 	
-	
+
+	@ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            })
+	@JoinTable(
+			name = "user_groups",
+			joinColumns = @JoinColumn(name = "group_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+			)
+	private List<User> users;
 	
 	
 	
@@ -44,17 +56,6 @@ public class Group {
 
 
 
-	@ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                CascadeType.PERSIST,
-                CascadeType.MERGE
-            })
-	@JoinTable(
-			name = "user_groups",
-			joinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id")
-			)
-	private List<User> users;
 	
 	
 	public List<User> getUsers() {

@@ -14,8 +14,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 })
 public class User {
 	
-    @Id
+    public User() {
+		super();
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private Long id;
     
     @Column(name = "name")
@@ -53,7 +58,23 @@ public class User {
     
     
     
-    public List<Group> getGroups() {
+    
+    public User(Long id, String name, String username, @Email String email, String imageUrl, Boolean emailVerified,
+			String password, @NotNull AuthProvider provider, String providerId, List<Group> groups) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.username = username;
+		this.email = email;
+		this.imageUrl = imageUrl;
+		this.emailVerified = emailVerified;
+		this.password = password;
+		this.provider = provider;
+		this.providerId = providerId;
+		this.groups = groups;
+	}
+
+	public List<Group> getGroups() {
 		return groups;
 	}
 

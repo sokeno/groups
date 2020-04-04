@@ -1,5 +1,6 @@
 package com.aot.groups.controllers;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,21 +15,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.aot.groups.models.Group;
 import com.aot.groups.models.User;
 import com.aot.groups.repositories.GroupRepository;
 
+@RestController
 @RequestMapping("/api")
 public class GroupController {
+	
     @Autowired
     private GroupRepository groupRepository;
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    
     @GetMapping("/groups")
-    public List <Group> getAllGroups(){
+    public ResponseEntity <List<Group>> getAllGroups(){
     	
-        return groupRepository.findAll();
+        return new ResponseEntity<> (groupRepository.findAll(),HttpStatus.OK);
     }
 
     @GetMapping("/groups/{id}")
