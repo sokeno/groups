@@ -24,6 +24,9 @@ public class Group {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "created_by")
+	private Long created_by;
+	
 
 	@ManyToMany(fetch = FetchType.LAZY,
             cascade = {
@@ -39,11 +42,12 @@ public class Group {
 	
 	
 	
-	public Group( String name, String description) {
+	public Group( String name, String description, Long created_by) {
 		super();
 
 		this.name = name;
 		this.description = description;
+		this.created_by = created_by;
 
 	}
 
@@ -58,6 +62,18 @@ public class Group {
 
 	
 	
+	public Long getCreated_by() {
+		return created_by;
+	}
+
+
+
+	public void setCreated_by(Long created_by) {
+		this.created_by = created_by;
+	}
+
+
+
 	public List<User> getUsers() {
 		return users;
 	}

@@ -90,7 +90,7 @@ public class GroupController {
     	  
     	  Group new_group = groupRepository
     			  
-            .save(new Group(group.getName(),group.getDescription()));
+            .save(new Group(group.getName(),group.getDescription(), group.getCreated_by()));
     	  
         return new ResponseEntity<>(new_group, HttpStatus.CREATED);
         
