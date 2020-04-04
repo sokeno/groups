@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aot.groups.models.Group;
 import com.aot.groups.models.User;
 import com.aot.groups.repositories.GroupRepository;
+import com.aot.groups.security.CurrentUser;
+import com.aot.groups.security.UserPrincipal;
 
 @RestController
 @RequestMapping("/api")
@@ -84,13 +86,13 @@ public class GroupController {
     }
     
     @PostMapping("/groups")
-    public ResponseEntity<Group> createGroup(@RequestBody Group group) {
+    public ResponseEntity<Group> createGroup(@RequestBody Group group, @CurrentUser UserPrincipal userPrincipal) {
     	
       try {
     	  
     	  Group new_group = groupRepository
     			  
-            .save(new Group(group.getName(),group.getDescription(), group.getCreated_by()));
+            .save(new Group(group.getName(),group.getDescription(), userPrincipal.getId()));
     	  
         return new ResponseEntity<>(new_group, HttpStatus.CREATED);
         
