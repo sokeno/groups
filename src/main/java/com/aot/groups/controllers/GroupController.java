@@ -51,7 +51,7 @@ public class GroupController {
           }
     }
 
-    @GetMapping("/groups/{name}")
+    @GetMapping("/groups/name/{name}")
     public ResponseEntity <Group> findByName(@PathVariable String name){
     	
     	Optional<Group> groupData = groupRepository.findByName(name);
