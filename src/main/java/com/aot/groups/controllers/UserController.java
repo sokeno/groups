@@ -5,8 +5,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,29 +36,29 @@ public class UserController {
 	                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 	    }
 
-	    @RequestMapping(value="/user", method = RequestMethod.GET)
+	    @GetMapping(value="/user")
 	    public List getAllUsers(){
 	        return (List) userRepository.findAll();
 	    }
 
-	    @RequestMapping(value = "/user", method = RequestMethod.POST)
+	    @PostMapping(value = "/user")
 	    public User create(@RequestBody User user){
 	        return userRepository.save(user);
 	    }
 
-	    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-	    public Optional<User> findOne(@PathVariable Long id){
-	        return userRepository.findById(id);
+	    @GetMapping(value = "/user/{id}")
+	    public User findOne(@PathVariable Long id){
+	        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
 	    }
 
-	    @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
+	    @PutMapping(value = "/user/{id}")
 	    public User update(@PathVariable Long id, @RequestBody User user){
 	    	User user1 = userRepository.findById(id).get();
 //	        user1.setId(id);
 	        return userRepository.save(user);
 	    }
 
-	    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+	    @DeleteMapping(value = "/user/{id}")
 	    public void delete(@PathVariable(value = "id") Long id){
 	    	userRepository.deleteById(id);
 	    }
