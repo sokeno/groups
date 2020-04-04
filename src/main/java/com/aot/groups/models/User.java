@@ -54,6 +54,7 @@ public class User {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
                 },mappedBy = "users")
+    @JsonIgnore
     private List<Group> groups;
     
     

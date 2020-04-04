@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.aot.groups.models.Group;
 import com.aot.groups.models.User;
 import com.aot.groups.repositories.GroupRepository;
+import com.aot.groups.repositories.UserRepository;
 import com.aot.groups.security.CurrentUser;
 import com.aot.groups.security.UserPrincipal;
 
@@ -29,6 +30,9 @@ public class GroupController {
 	
     @Autowired
     private GroupRepository groupRepository;
+    
+ 	@Autowired
+ 	private UserRepository userRepository;
 
     
     @GetMapping("/groups")
@@ -48,7 +52,7 @@ public class GroupController {
             
           } else {
         	  
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
             
           }
     }
@@ -64,7 +68,7 @@ public class GroupController {
              
            } else {
          	  
-             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
              
            }
     }
@@ -76,11 +80,11 @@ public class GroupController {
     		
     		groupRepository.deleteById(id);
     		
-    	      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    	      return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
     	      
     	    } catch (Exception e) {
     	    	
-    	      return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+    	      return new ResponseEntity<>(null,HttpStatus.EXPECTATION_FAILED);
     	      
     	    }
     }
@@ -122,26 +126,36 @@ public class GroupController {
         
       } else {
     	  
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
       }
     }
 
-    @PutMapping("/groups/{id}/users")
-    public ResponseEntity<Group> joinGroup(@PathVariable("id") long id, @RequestBody User group) {
+    @GetMapping("/groups/join/{id}")
+    public ResponseEntity<String> joinGroup(@PathVariable("id") long id, @CurrentUser UserPrincipal userPrincipal) {
     	
       Optional<Group> groupData = groupRepository.findById(id);
+      
+      Optional<User> user = userRepository.findById(userPrincipal.getId());
+
 
       if (groupData.isPresent()) {
     	  
     	  Group new_group = groupData.get();
     	  
-    	  new_group.getUsers().add(group);
+    	  User current_user = user.get();
     	  
-        return new ResponseEntity<>(groupRepository.save(new_group), HttpStatus.OK);
-        
+    	  if(!new_group.getUsers().contains(current_user)) {
+    		  
+    	  new_group.getUsers().add(current_user);
+    	  
+    	  groupRepository.save(new_group);
+    	  
+        return new ResponseEntity<>("Saved Successfully", HttpStatus.OK);
+    	  }
+    	  return new ResponseEntity<>("You already joined the group",HttpStatus.CONFLICT);
       } else {
     	  
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
       }
     }
 
