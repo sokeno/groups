@@ -1,26 +1,24 @@
-version: '3'
+
+version: '2'
 services:
-  aot-mysql:
-    container_name: aot-mysql
-    image: mysql/mysql-server:5.7
-    environment:
-      MYSQL_DATABASE: groups
-      MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_USER: admin
-      MYSQL_ROOT_HOST: '%'
-    ports:
-    - "3306:3306"
-    restart: always
-
-  app:
-    build: .
-    volumes:
-    - .:/app
-    - ~/.m2:/root/.m2
-    expose:
-      - "8080"
-    working_dir: /app
-    command: mvn clean spring-boot:run
+  groups:
+    image: groups:0.0.1
+    container_name: groups
     depends_on:
-    - aot-mysql
+    - mariadb
+    environment:
+    - SPRING_DATASOURCE_URL=jdbc:mysql://groups:3306/mydb?useUnicode=true&characterEncoding=utf8&useSSL=false
+    ports:
+    - 8080:8080
 
+  mariadb:
+    image: mariadb:latest
+    container_name: groupsdb
+    volumes:
+    - /home/docker/volumes/myapp/mysql/:/var/lib/mysql/
+    environment:
+    - MYSQL_ROOT_PASSWORD=mysql
+    - MYSQL_DATABASE=groups
+    - MYSQL_USER=admin
+    - MYSQL_PASSWORD=mysql
+    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8
