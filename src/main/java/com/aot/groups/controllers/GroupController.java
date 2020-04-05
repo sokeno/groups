@@ -149,7 +149,7 @@ public class GroupController {
     	  
     	  groupRepository.save(new_group);
     	  
-        return new ResponseEntity<>("Saved Successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Successfully Joined Group", HttpStatus.OK);
     	  }
     	  return new ResponseEntity<>("You already joined the group",HttpStatus.CONFLICT);
       } else {
