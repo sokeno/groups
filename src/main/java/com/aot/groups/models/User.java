@@ -7,11 +7,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import com.aot.groups.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "users",uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 	
     public User() {
@@ -61,7 +63,7 @@ public class User {
     
     
     public User(Long id, String name, String username, @Email String email, String imageUrl, Boolean emailVerified,
-			String password, @NotNull AuthProvider provider, String providerId, List<Group> groups) {
+			String password, @NotNull AuthProvider provider, String providerId) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -72,8 +74,17 @@ public class User {
 		this.password = password;
 		this.provider = provider;
 		this.providerId = providerId;
+	
+	}
+    
+    
+
+	public User(List<Group> groups) {
+		super();
 		this.groups = groups;
 	}
+
+
 
 	public List<Group> getGroups() {
 		return groups;

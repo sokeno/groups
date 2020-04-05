@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aot.groups.exception.ResourceNotFoundException;
+import com.aot.groups.models.Group;
 import com.aot.groups.models.User;
 import com.aot.groups.repositories.UserRepository;
 import com.aot.groups.security.CurrentUser;
@@ -35,6 +38,22 @@ public class UserController {
 	        return userRepository.findById(userPrincipal.getId())
 	                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
 	    }
+	    
+	    @GetMapping("/user/me/groups")
+	    @PreAuthorize("hasRole('USER')")
+	    public ResponseEntity<List<Group>> getCurrentUserGroups(@CurrentUser UserPrincipal userPrincipal) {
+	    	
+	    	List<Group> userData = userRepository.findById(userPrincipal.getId()).get().getGroups();
+	    	
+	    	if(!userData.isEmpty()) {
+	    		
+	    	return new ResponseEntity<>(userData, HttpStatus.OK);
+	    	
+	    	}
+	    	
+	    	return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+	    }
+
 
 	    @GetMapping(value="/user")
 	    public List getAllUsers(){
