@@ -1,24 +1,31 @@
-
-version: '2'
+version: "2"
 services:
-  groups:
-    image: groups:0.0.1
-    container_name: groups
+  docker-mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test
+      - MYSQL_PASSWORD=root
+  spring-docker-service:
+    image: spring-docker-service
+    build:
+      context: ./aot-angular
+      dockerfile: ./Dockerfile.angular
     depends_on:
-    - mariadb
-    environment:
-    - SPRING_DATASOURCE_URL=jdbc:mysql://groups:3306/mydb?useUnicode=true&characterEncoding=utf8&useSSL=false
+      - docker-mysql
     ports:
-    - 8080:8080
-
-  mariadb:
-    image: mariadb:latest
-    container_name: groupsdb
-    volumes:
-    - /home/docker/volumes/myapp/mysql/:/var/lib/mysql/
+      - 8080:8080
     environment:
-    - MYSQL_ROOT_PASSWORD=mysql
-    - MYSQL_DATABASE=groups
-    - MYSQL_USER=admin
-    - MYSQL_PASSWORD=mysql
-    command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8
+      - CATALINA_OPTS=-Dspring.profiles.active=container
+      - DATABASE_HOST=docker-mysql
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=test
+      - DATABASE_PORT=3306
+  angular-docker-service:
+    image: angular-docker-service
+    build:
+      context: ./groups
+      dockerfile: ./Dockerfile.spring
+    ports:
+      - 80:80
