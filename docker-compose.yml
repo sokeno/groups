@@ -1,31 +1,30 @@
 version: "2"
 services:
   docker-mysql:
-    image: mysql:latest
+    image: wangxian/alpine-mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=test
-      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=groups
+      - MYSQL_PASSWORD=mysql
   spring-docker-service:
     image: spring-docker-service
     build:
-      context: ./aot-angular
-      dockerfile: ./Dockerfile.angular
+      context: ./spring/
+      dockerfile: Dockerfile.spring
     depends_on:
       - docker-mysql
     ports:
       - 8080:8080
     environment:
-      - CATALINA_OPTS=-Dspring.profiles.active=container
       - DATABASE_HOST=docker-mysql
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=root
-      - DATABASE_NAME=test
+      - DATABASE_USER=admin
+      - DATABASE_PASSWORD=mysql
+      - DATABASE_NAME=groups
       - DATABASE_PORT=3306
   angular-docker-service:
     image: angular-docker-service
     build:
-      context: ./groups
-      dockerfile: ./Dockerfile.spring
+      context: ./angular/
+      dockerfile: Dockerfile.angular
     ports:
       - 80:80
